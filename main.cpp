@@ -1,6 +1,7 @@
 #include <iostream>
 #include <pqxx/pqxx>
 #include <vector>
+#include <fstream>
 #include "exerciser.h"
 
 using namespace std;
@@ -41,13 +42,40 @@ void createTableSQL(string& sql) {
     "BPG NUMERIC(2,1) NOT NULL);";
 }
 
-void readFileToVector(
-  vector<vector<string>>& color,
-  vector<vector<string>>& state,
-  vector<vector<string>>& team,
-  vector<vector<string>>& player) {
-
+void readFileToVector(vector<vector<string> >& vec, string filename) {
+  ifstream ifs;
+  ifs.open(filename.c_str(), ifstream::in);
+  if(!ifs.good()) {
+    cerr << "Cannot open file." << endl;
+    exit(EXIT_FAILURE)；
+  }
+  while(!ifs.eof() ) {
+    vector<string> vec_temp;
+    string buffer;
+    getline(ifs, buffer);
+    buffer += " ";
+    int l = 0, r = 0;
+    while(l < buffer.size()) {
+      if(buffer[l] == ' ') {
+        vec_temp.push_back(buffer.substr( r, l - r));
+        r = l + 1;
+      }
+      l++;
+    }
+    vec.push_back(vec_temp);
+  }
+  ifs.close();
 }
+
+void output(vector<vector<string> >& vec) {
+  for(int i = 0 ; i < vec.size(); i++ ) {
+    for(int j = 0 ; j < vec[i].size(); j++ ) {
+      cout << vec[i][j] << " ";
+    }
+    cout << endl;
+  }
+}
+
 int main (int argc, char *argv[]) 
 {
 
@@ -71,7 +99,17 @@ int main (int argc, char *argv[])
     }
 /////////////////// Create table ///////////////////////////
     createTableSQL( sql );
-    readFileToVector(color, state, team, player);
+////////////////////////// Read file ///////////////////////////  
+    readFileToVector(color, "color.txt");
+    readFileToVector(state, "state.txt");
+    readFileToVector(team, "team.txt");
+    readFileToVector(player, "player.txt");
+///////////////////////////////////////////////////////////////
+    output(color);
+    output(state);
+    output(team);
+    output(player);
+
     W = new work(*C);
     cerr << "new work success"<<endl;
     W->exec(sql);
@@ -94,5 +132,3 @@ int main (int argc, char *argv[])
   delete W;
   return 0;
 }
-
-
