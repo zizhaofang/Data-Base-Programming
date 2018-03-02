@@ -89,7 +89,7 @@ int main (int argc, char *argv[])
 
   //Close database connection
   C->disconnect();
-
+  delete C;
   return 0;
 }
 
