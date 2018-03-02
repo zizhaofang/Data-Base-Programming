@@ -1,6 +1,6 @@
 #include <iostream>
 #include <pqxx/pqxx>
-
+#include <vector>
 #include "exerciser.h"
 
 using namespace std;
@@ -41,6 +41,13 @@ void createTableSQL(string& sql) {
     "BPG NUMERIC(2,1) NOT NULL);";
 }
 
+void readFileToVector(
+  vector<vector<string>>& color,
+  vector<vector<string>>& state,
+  vector<vector<string>>& team,
+  vector<vector<string>>& player) {
+
+}
 int main (int argc, char *argv[]) 
 {
 
@@ -48,6 +55,10 @@ int main (int argc, char *argv[])
   connection *C;
   work *W;
   string sql;
+  vector<vector<string>> color;
+  vector<vector<string>> state;
+  vector<vector<string>> team;
+  vector<vector<string>> player;
   try{
     //Establish a connection to the database
     //Parameters: database name, user name, user password
@@ -60,6 +71,7 @@ int main (int argc, char *argv[])
     }
 /////////////////// Create table ///////////////////////////
     createTableSQL( sql );
+    readFileToVector(color, state, team, player);
     W = new work(*C);
     cerr << "new work success"<<endl;
     W->exec(sql);
