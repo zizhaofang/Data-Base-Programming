@@ -2,6 +2,7 @@
 #include <pqxx/pqxx>
 #include <vector>
 #include <fstream>
+#include <cstdlib>
 #include "exerciser.h"
 
 using namespace std;
@@ -47,7 +48,7 @@ void readFileToVector(vector<vector<string> >& vec, string filename) {
   ifs.open(filename.c_str(), ifstream::in);
   if(!ifs.good()) {
     cerr << "Cannot open file." << endl;
-    exit(EXIT_FAILURE)；
+    exit(EXIT_FAILURE);
   }
   while(!ifs.eof() ) {
     vector<string> vec_temp;
@@ -83,10 +84,10 @@ int main (int argc, char *argv[])
   connection *C;
   work *W;
   string sql;
-  vector<vector<string>> color;
-  vector<vector<string>> state;
-  vector<vector<string>> team;
-  vector<vector<string>> player;
+  vector<vector<string> > color;
+  vector<vector<string> > state;
+  vector<vector<string> > team;
+  vector<vector<string> > player;
   try{
     //Establish a connection to the database
     //Parameters: database name, user name, user password
