@@ -17,11 +17,10 @@ void add_player(connection *C, int team_id, int jersey_num, string first_name, s
     vec.push_back(to_string( apg ));
     vec.push_back(to_string( spg ).substr(0,3));
     vec.push_back(to_string( spg ).substr(0,3));
-    sql += 
-      "VALUES ( " + "DEFAULT" + "," + player[i][1] + "," + player[i][2] + ",'" + player[i][3] + "','" + player[i][4] + "'," + player[i][5] + "," 
-      + player[i][6] + "," + player[i][7] + "," + player[i][8] + "," + player[i][9] +","+ player[i][10]  +");";
+    sql += "VALUES ( " + string("DEFAULT") + "," + vec[1] + "," + vec[2] + ",'" + vec[3] + "','" + vec[4] + "'," + vec[5] + "," 
+      + vec[6] + "," + vec[7] + "," + vec[8] + "," + vec[9] +","+ vec[10]  +");";
     work* W = new work(*C);
-    W->exec(temp);
+    W->exec(sql);
     W->commit();
 }
 
