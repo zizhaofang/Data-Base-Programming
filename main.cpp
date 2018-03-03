@@ -54,9 +54,15 @@ void readFileToVector(vector<vector<string> >& vec, string filename) {
     vector<string> vec_temp;
     string buffer;
     getline(ifs, buffer);
+    if( !buffer.size() > 0 )
+      break;
     buffer += " ";
     int l = 0, r = 0;
     while(l < buffer.size()) {
+      if( (int)buffer[l] == '\'' ) { // ' <-character
+        buffer.insert(l, 1, buffer[l] );
+        l++;
+      }
       if(buffer[l] == ' ') {
         vec_temp.push_back(buffer.substr( r, l - r));
         r = l + 1;
@@ -70,6 +76,7 @@ void readFileToVector(vector<vector<string> >& vec, string filename) {
 
 
 void output(vector<vector<string> >& vec) {
+  cout << "num of item: " << vec[0].size() << " "<< endl;
   for(int i = 0 ; i < vec.size(); i++ ) {
     for(int j = 0 ; j < vec[i].size(); j++ ) {
       cout << vec[i][j] << " ";
@@ -78,31 +85,38 @@ void output(vector<vector<string> >& vec) {
   }
 }
 
-void insertSQL(string& sql, vector<vector<string> >& color, vector<vector<string> >& state, vector<vector<string> >& team, vector<vector<string> >& player ) {
-  string ins_arr[4] = {
-    "INSERT INTO COLOR (COLOR_ID, NAME) ",
-    "INSERT INTO STATE (STATE_ID, NAME) ",
-    "INSERT INTO TEAM (TEAM_ID, NAME, STATE_ID, COLOR_ID, WINS, LOSSES) ",
-    "INSERT INTO PLAYER (PLAYER_ID, TEAM_ID, UNIFORM_NUM, FIRST_NAME, LAST_NAME, MPG, PPG, RPG, APG, SPG, BPG) "
-  };
-  for(int i = 0 ; i < color.size() ; i++ ) {
+void insertSQL( 
+  vector<vector<string> >& color,
+  vector<vector<string> >& state, 
+  vector<vector<string> >& team, 
+  vector<vector<string> >& player,
+  work* W ) {
+  vector<string> ins_arr;
+  ins_arr.push_back("INSERT INTO COLOR (COLOR_ID, NAME) ");
+  ins_arr.push_back("INSERT INTO STATE (STATE_ID, NAME) ");
+  ins_arr.push_back("INSERT INTO TEAM (TEAM_ID, NAME, STATE_ID, COLOR_ID, WINS, LOSSES) ");
+  ins_arr.push_back("INSERT INTO PLAYER (PLAYER_ID, TEAM_ID, UNIFORM_NUM, FIRST_NAME, LAST_NAME, MPG, PPG, RPG, APG, SPG, BPG) ");
+  for(int i = 0 ; i < color.size(); i++ ) {
     string temp = ins_arr[0] +
       "VALUES ( " + color[i][0] + ", '"+ color[i][1] + "');";
-    sql += temp;
+    W->exec(temp);
   }
   for(int i = 0 ; i < state.size(); i++ ){
     string temp = ins_arr[1] + 
-      "VALUES ( " + state[i][0] + ", '" + color[i][1] + "');";
+      "VALUES ( " + state[i][0] + ", '" + state[i][1] + "');";
+    W->exec(temp);
   }
   for (int i = 0; i < team.size(); i++ ) {
     string temp = ins_arr[2] + 
       "VALUES ( " + team[i][0] + ",'" + team[i][1] + "', "+ team[i][2] 
       + "," + team[i][3] + "," + team[i][4] + "," + team[i][5] + ");";
+    W->exec(temp);
   }
   for(int i = 0 ; i < player.size() ; i++ ) {
     string temp = ins_arr[3] + 
       "VALUES ( " + player[i][0] + "," + player[i][1] + "," + player[i][2] + ",'" + player[i][3] + "','" + player[i][4] + "'," + player[i][5] + "," 
-      + player[i][6] + "," + player[i][7] + "," + player[i][8] + "," + player[i][9] + player[i][10] + ");";
+      + player[i][6] + "," + player[i][7] + "," + player[i][8] + "," + player[i][9] +","+ player[i][10] + ");";
+    W->exec(temp);
   }
 }
 
@@ -135,22 +149,16 @@ int main (int argc, char *argv[])
     readFileToVector(team, "team.txt");
     readFileToVector(player, "player.txt");
 ///////////////////////////////////////////////////////////////
-    insertSQL(sql, color, state, team, player);
-    /*output(color);
-    output(state);
-    output(team);
-    output(player);
-*/
     W = new work(*C);
-    cerr << "new work success"<<endl;
     W->exec(sql);
+    insertSQL( color, state, team, player, W);
+    
     W->commit();
   } catch (const std::exception &e){
     cerr << 
     e.what() << std::endl;
     return 1;
   }
-  cout << "Try to create table" <<endl;
   //TODO: create PLAYER, TEAM, STATE, and COLOR tables in the ACC_BBALL database
   //      load each table with rows from the provided source txt files
 
