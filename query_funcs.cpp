@@ -4,6 +4,25 @@
 void add_player(connection *C, int team_id, int jersey_num, string first_name, string last_name,
                 int mpg, int ppg, int rpg, int apg, double spg, double bpg)
 {
+    string sql = "INSERT INTO PLAYER ( TEAM_ID, UNIFORM_NUM, FIRST_NAME, LAST_NAME, MPG, PPG, RPG, APG, SPG, BPG) ";
+    vector<string> vec;
+    vec.push_back(""); // unify with readfile
+    vec.push_back( to_string(team_id) );
+    vec.push_back( to_string( jersey_num )  );
+    vec.push_back( first_name);
+    vec.push_back(last_name);
+    vec.push_back( to_string( mpg ) ) ;
+    vec.push_back(to_string( ppg ));
+    vec.push_back(to_string( rpg ));
+    vec.push_back(to_string( apg ));
+    vec.push_back(to_string( spg ).substr(0,3));
+    vec.push_back(to_string( spg ).substr(0,3));
+    sql += 
+      "VALUES ( " + "DEFAULT" + "," + player[i][1] + "," + player[i][2] + ",'" + player[i][3] + "','" + player[i][4] + "'," + player[i][5] + "," 
+      + player[i][6] + "," + player[i][7] + "," + player[i][8] + "," + player[i][9] +","+ player[i][10]  +");";
+    work* W = new work(*C);
+    W->exec(temp);
+    W->commit();
 }
 
 

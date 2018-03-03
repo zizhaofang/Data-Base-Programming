@@ -16,21 +16,21 @@ void createTableSQL(string& sql) {
   sql += "DROP TABLE IF EXISTS COLOR;";
   
   sql += "CREATE TABLE COLOR( "\
-    "COLOR_ID INT PRIMARY KEY NOT NULL, "\
+    "COLOR_ID SERIAL  PRIMARY KEY NOT NULL, "\
     "NAME TEXT NOT NULL);";
   
   sql += "CREATE TABLE STATE( "\
-    "STATE_ID INT PRIMARY KEY NOT NULL, "\
+    "STATE_ID SERIAL  PRIMARY KEY NOT NULL, "\
     "NAME TEXT NOT NULL);";
   sql += "CREATE TABLE TEAM ( "\
-    "TEAM_ID INT PRIMARY KEY NOT NULL, "\
+    "TEAM_ID SERIAL  PRIMARY KEY NOT NULL, "\
     "NAME TEXT NOT NULL, "\
     "STATE_ID INT NOT NULL REFERENCES STATE(STATE_ID), "\
     "COLOR_ID INT NOT NULL REFERENCES COLOR(COLOR_ID), "\
     "WINS INT NOT NULL, "\
     "LOSSES INT NOT NULL);";
   sql += "CREATE TABLE PLAYER ( "\
-    "PLAYER_ID INT PRIMARY KEY NOT NULL, "\
+    "PLAYER_ID SERIAL  PRIMARY KEY NOT NULL, "\
     "TEAM_ID INT NOT NULL REFERENCES TEAM(TEAM_ID), "\
     "UNIFORM_NUM INT NOT NULL, "\
     "FIRST_NAME TEXT NOT NULL, "\
@@ -98,23 +98,23 @@ void insertSQL(
   ins_arr.push_back("INSERT INTO PLAYER (PLAYER_ID, TEAM_ID, UNIFORM_NUM, FIRST_NAME, LAST_NAME, MPG, PPG, RPG, APG, SPG, BPG) ");
   for(int i = 0 ; i < color.size(); i++ ) {
     string temp = ins_arr[0] +
-      "VALUES ( " + color[i][0] + ", '"+ color[i][1] + "');";
+      "VALUES ( " + "DEFAULT" + ", '"+ color[i][1] + "');";
     W->exec(temp);
   }
   for(int i = 0 ; i < state.size(); i++ ){
     string temp = ins_arr[1] + 
-      "VALUES ( " + state[i][0] + ", '" + state[i][1] + "');";
+      "VALUES ( " + "DEFAULT" + ", '" + state[i][1] + "');";
     W->exec(temp);
   }
   for (int i = 0; i < team.size(); i++ ) {
     string temp = ins_arr[2] + 
-      "VALUES ( " + team[i][0] + ",'" + team[i][1] + "', "+ team[i][2] 
+      "VALUES ( " + "DEFAULT" + ",'" + team[i][1] + "', "+ team[i][2] 
       + "," + team[i][3] + "," + team[i][4] + "," + team[i][5] + ");";
     W->exec(temp);
   }
   for(int i = 0 ; i < player.size() ; i++ ) {
     string temp = ins_arr[3] + 
-      "VALUES ( " + player[i][0] + "," + player[i][1] + "," + player[i][2] + ",'" + player[i][3] + "','" + player[i][4] + "'," + player[i][5] + "," 
+      "VALUES ( " + "DEFAULT" + "," + player[i][1] + "," + player[i][2] + ",'" + player[i][3] + "','" + player[i][4] + "'," + player[i][5] + "," 
       + player[i][6] + "," + player[i][7] + "," + player[i][8] + "," + player[i][9] +","+ player[i][10] + ");";
     W->exec(temp);
   }
@@ -148,11 +148,10 @@ int main (int argc, char *argv[])
     readFileToVector(state, "state.txt");
     readFileToVector(team, "team.txt");
     readFileToVector(player, "player.txt");
-///////////////////////////////////////////////////////////////
     W = new work(*C);
     W->exec(sql);
     insertSQL( color, state, team, player, W);
-    
+
     W->commit();
   } catch (const std::exception &e){
     cerr << 
