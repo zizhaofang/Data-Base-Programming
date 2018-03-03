@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
       "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)" \
       "VALUES (3, 'Teddy', 23, 'Norway', 20000.00 );" \
       "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)" \
-	"VALUES (4, 'Mark', 25, 'Rich-Mond ', 65000.00 );";
+	    "VALUES (4, 'Mark', 25, 'Rich-Mond ', 65000.00 );";
 
       /* Create a transactional object. */
       work W(C);

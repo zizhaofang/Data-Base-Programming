@@ -68,12 +68,41 @@ void readFileToVector(vector<vector<string> >& vec, string filename) {
   ifs.close();
 }
 
+
 void output(vector<vector<string> >& vec) {
   for(int i = 0 ; i < vec.size(); i++ ) {
     for(int j = 0 ; j < vec[i].size(); j++ ) {
       cout << vec[i][j] << " ";
     }
     cout << endl;
+  }
+}
+
+void insertSQL(string& sql, vector<vector<string> >& color, vector<vector<string> >& state, vector<vector<string> >& team, vector<vector<string> >& player ) {
+  string ins_arr[4] = {
+    "INSERT INTO COLOR (COLOR_ID, NAME) ",
+    "INSERT INTO STATE (STATE_ID, NAME) ",
+    "INSERT INTO TEAM (TEAM_ID, NAME, STATE_ID, COLOR_ID, WINS, LOSSES) ",
+    "INSERT INTO PLAYER (PLAYER_ID, TEAM_ID, UNIFORM_NUM, FIRST_NAME, LAST_NAME, MPG, PPG, RPG, APG, SPG, BPG) "
+  };
+  for(int i = 0 ; i < color.size() ; i++ ) {
+    string temp = ins_arr[0] +
+      "VALUES ( " + color[i][0] + ", '"+ color[i][1] + "');";
+    sql += temp;
+  }
+  for(int i = 0 ; i < state.size(); i++ ){
+    string temp = ins_arr[1] + 
+      "VALUES ( " + state[i][0] + ", '" + color[i][1] + "');";
+  }
+  for (int i = 0; i < team.size(); i++ ) {
+    string temp = ins_arr[2] + 
+      "VALUES ( " + team[i][0] + ",'" + team[i][1] + "', "+ team[i][2] 
+      + "," + team[i][3] + "," + team[i][4] + "," + team[i][5] + ");";
+  }
+  for(int i = 0 ; i < player.size() ; i++ ) {
+    string temp = ins_arr[3] + 
+      "VALUES ( " + player[i][0] + "," + player[i][1] + "," + player[i][2] + ",'" + player[i][3] + "','" + player[i][4] + "'," + player[i][5] + "," 
+      + player[i][6] + "," + player[i][7] + "," + player[i][8] + "," + player[i][9] + player[i][10] + ");";
   }
 }
 
@@ -106,17 +135,19 @@ int main (int argc, char *argv[])
     readFileToVector(team, "team.txt");
     readFileToVector(player, "player.txt");
 ///////////////////////////////////////////////////////////////
-    output(color);
+    insertSQL(sql, color, state, team, player);
+    /*output(color);
     output(state);
     output(team);
     output(player);
-
+*/
     W = new work(*C);
     cerr << "new work success"<<endl;
     W->exec(sql);
     W->commit();
   } catch (const std::exception &e){
-    cerr << e.what() << std::endl;
+    cerr << 
+    e.what() << std::endl;
     return 1;
   }
   cout << "Try to create table" <<endl;
