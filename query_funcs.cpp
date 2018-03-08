@@ -13,7 +13,7 @@ void unifyStringForamt(string& s) {
 void add_player(connection *C, int team_id, int jersey_num, string first_name, string last_name,
                 int mpg, int ppg, int rpg, int apg, double spg, double bpg)
 {
-    string sql = "INSERT INTO PLAYER ( TEAM_ID, UNIFORM_NUM, FIRST_NAME, LAST_NAME, MPG, PPG, RPG, APG, SPG, BPG) ";
+    string sql = "INSERT INTO PLAYER ( PLAYER_ID, TEAM_ID, UNIFORM_NUM, FIRST_NAME, LAST_NAME, MPG, PPG, RPG, APG, SPG, BPG) ";
     vector<string> vec;
     vec.push_back(""); // unify with readfile
     vec.push_back( to_string(team_id) );
