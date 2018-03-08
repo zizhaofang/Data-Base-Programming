@@ -1,5 +1,14 @@
 #include "query_funcs.h"
 
+void unifyStringForamt(string& s) {
+  for(int i = 0 ; i < s.size(); i++) {
+    if(s[i] == '\'') {
+      s.insert(i, 1, s[i]);
+      i++;
+    }
+  }
+
+}
 
 void add_player(connection *C, int team_id, int jersey_num, string first_name, string last_name,
                 int mpg, int ppg, int rpg, int apg, double spg, double bpg)
@@ -15,8 +24,8 @@ void add_player(connection *C, int team_id, int jersey_num, string first_name, s
     vec.push_back(to_string( ppg ));
     vec.push_back(to_string( rpg ));
     vec.push_back(to_string( apg ));
-    vec.push_back(to_string( spg ).substr(0,3));
-    vec.push_back(to_string( spg ).substr(0,3));
+    vec.push_back(to_string( spg ));
+    vec.push_back(to_string( spg ));
     sql += "VALUES ( " + string("DEFAULT") + "," + vec[1] + "," + vec[2] + ",'" + vec[3] + "','" + vec[4] + "'," + vec[5] + "," 
       + vec[6] + "," + vec[7] + "," + vec[8] + "," + vec[9] +","+ vec[10]  +");";
     work* W = new work(*C);
@@ -27,16 +36,43 @@ void add_player(connection *C, int team_id, int jersey_num, string first_name, s
 
 void add_team(connection *C, string name, int state_id, int color_id, int wins, int losses)
 {
+  string sql = "INSERT INTO TEAM (TEAM_ID, NAME, STATE_ID, COLOR_ID, WINS, LOSSES) ";
+  vector<string> vec;
+  vec.push_back("");
+  unifyStringForamt(name);
+  vec.push_back(name);
+  vec.push_back(to_string(state_id));
+  vec.push_back(to_string(color_id));
+  vec.push_back(to_string(wins));
+  vec.push_back((to_string(losses)));
+  sql = sql + "VALUES ( " + "DEFAULT" + ",'" + vec[1] + "', "+ vec[2] 
+      + "," + vec[3] + "," +vec[4] + "," + vec[5] + ");";
+
 }
 
 
 void add_state(connection *C, string name)
 {
+  string temp = name;
+  unifyStringForamt(temp);
+  string sql = "INSERT INTO STATE (STATE_ID, NAME) ";
+  sql += "VALUES ( DEFAULT, '" + temp + "')";
+  work* W = new work(*C);
+  W->exec(sql);
+  W->commit();
+  
 }
 
 
 void add_color(connection *C, string name)
 {
+  string temp = name;
+  unifyStringForamt(temp);
+  string sql = "INSERT INTO COLOR (COLOR_ID, NAME) ";
+  sql += "VALUES ( DEFAULT, '" + temp + "')";
+  work* W = new work(*C);
+  W->exec(sql);
+  W->commit();
 }
 
 
