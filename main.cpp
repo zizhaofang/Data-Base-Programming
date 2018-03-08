@@ -39,8 +39,8 @@ void createTableSQL(string& sql) {
     "PPG INT NOT NULL, "\
     "RPG INT NOT NULL, "\
     "APG INT NOT NULL, "\
-    "SPG NUMERIC(2,1) NOT NULL, "\
-    "BPG NUMERIC(2,1) NOT NULL);";
+    "SPG REAL NOT NULL, "\
+    "BPG REAL NOT NULL);";
 }
 
 void readFileToVector(vector<vector<string> >& vec, string filename) {
@@ -160,11 +160,7 @@ int main (int argc, char *argv[])
   }
   //TODO: create PLAYER, TEAM, STATE, and COLOR tables in the ACC_BBALL database
   //      load each table with rows from the provided source txt files
-
-
   exercise(C);
-
-
   //Close database connection
   C->disconnect();
   delete C;
