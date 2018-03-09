@@ -6,5 +6,6 @@ void exercise(connection *C)
     add_color(C,"NEW");
     add_state(C, "NEW");
     add_team(C, "NEW", 1, 1, 1, 1);
+    query1(C, 0,0,0,1,0,10,0,0,0,0,0,0,0,0,0,0,0,0);
 
 }
