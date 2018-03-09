@@ -206,7 +206,7 @@ void query2(connection *C, string team_color)
 
 void query3(connection *C, string team_name)
 {
-  string sql = "SELECT FIRST_NAME, LAST_NAME FROM PLAYER, COLOR, TEAM WHERE PLAYER.TEAM_ID = TEAM.TEAM_ID AND TEAM.NAME = '" + team_name + "' ORDER BY PPG DESC;"; 
+  string sql = "SELECT FIRST_NAME, LAST_NAME FROM PLAYER, TEAM WHERE PLAYER.TEAM_ID = TEAM.TEAM_ID AND TEAM.NAME = '" + team_name + "' ORDER BY PPG DESC;"; 
   try {
     cout << "FIRST_NAME LAST_NAME"<<endl;
     nontransaction N(*C);
