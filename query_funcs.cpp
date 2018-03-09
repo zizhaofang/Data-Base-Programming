@@ -8,7 +8,6 @@ void unifyStringForamt(string& s) {
       i++;
     }
   }
-
 }
 
 void add_player(connection *C, int team_id, int jersey_num, string first_name, string last_name,
@@ -227,7 +226,7 @@ void query3(connection *C, string team_name)
 
 void query4(connection *C, string team_state, string team_color)
 {
-  string sql = "SELECT FIRST_NAME, LAST_NAME, UNIFORM_NUM FROM PLAYER, STATE, COLOR, TEAM WHERE PLAYER.TEAM_ID = TEAM.TEAM_ID AND ( TEAM.STATE_ID = STATE.STATE_ID AND TEAM.NAME = '" + team_state "') AND ( TEAM.COLOR_ID = COLOR.COLOR_ID AND COLOR.NAME = '" + team_color + "' );";
+  string sql = "SELECT FIRST_NAME, LAST_NAME, UNIFORM_NUM FROM PLAYER, STATE, COLOR, TEAM WHERE PLAYER.TEAM_ID = TEAM.TEAM_ID AND ( TEAM.STATE_ID = STATE.STATE_ID AND STATE.NAME = '" + team_state + "') AND ( TEAM.COLOR_ID = COLOR.COLOR_ID AND COLOR.NAME = '" + team_color + "' );";
   try {
     cout << "FIRST_NAME LAST_NAME UNIFORM_NUM"<<endl;
     nontransaction N(*C);

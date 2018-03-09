@@ -9,7 +9,7 @@ void exercise(connection *C)
     query1(C, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,3,5);
     query2(C, "DarkBlue");
     query3(C, "Duke");
-    query4(C, "NC", "Red");
+    query4(C, "NC", "DarkBlue");
     query5(C, 10);
 
 }
