@@ -165,19 +165,10 @@ void query1(connection *C,
     nontransaction N(*C);
     result R( N.exec( sql ));
     for (result::const_iterator c = R.begin(); c != R.end(); ++c) {
-      cout 
-      << c[0].as<string>() << " "
-      << c[1].as<string>() << " "
-      << c[2].as<string>() << " "
-      << c[3].as<string>() << " "
-      << c[4].as<string>() << " "
-      << c[5].as<string>() << " "
-      << c[6].as<string>() << " "
-      << c[7].as<string>() << " "
-      << c[8].as<string>() << " "
-      << c[9].as<string>() << " "
-      << c[10].as<string>()
-      <<endl;
+      for(int i = 0; i < 11; i++ ) {
+        cout << c[i].as<string>() << " ";
+      }
+      cout << endl;
     }
   }catch (const pqxx::sql_error &e) {
     std::cerr << "SQL error: " << e.what() << std::endl;
@@ -193,19 +184,93 @@ void query1(connection *C,
 
 void query2(connection *C, string team_color)
 {
+  string sql = "SELECT TEAM.NAME FROM TEAM, COLOR WHERE TEAM.COLOR_ID = COLOR.COLOR_ID AND COLOR.NAME = '" 
+  + team_color + "' ; ";
+  try {
+    cout << "NAME"<<endl;
+    nontransaction N(*C);
+    result R( N.exec( sql ));
+    for (result::const_iterator c = R.begin(); c != R.end(); ++c) {
+      cout << c[0].as<string>() << endl;
+    }
+  } catch (const pqxx::sql_error &e) {
+    std::cerr << "SQL error: " << e.what() << std::endl;
+    std::cerr << "Query was: " << e.query() << std::endl;
+    exit(EXIT_FAILURE);
+  } catch (const std::exception &e) {
+    std::cerr << "Error: " << e.what() << std::endl;
+    exit(EXIT_FAILURE);
+  } 
 }
 
 
 void query3(connection *C, string team_name)
 {
+  string sql = "SELECT FIRST_NAME, LAST_NAME "
+  + "FROM PLAYER, COLOR " 
+  + "WHERE PLAYER.TEAM_ID = TEAM.TEAM.ID AND TEAM.NAME = '" + team_name + "' " 
+  + "ORDER BY PPG DESC;"; 
+  try {
+    cout << "FIRST_NAME LAST_NAME"<<endl;
+    nontransaction N(*C);
+    result R( N.exec( sql ));
+    for (result::const_iterator c = R.begin(); c != R.end(); ++c) {
+      cout << c[0].as<string>() << " "<< c[1].as<string>()  << endl;
+    }
+  } catch (const pqxx::sql_error &e) {
+    std::cerr << "SQL error: " << e.what() << std::endl;
+    std::cerr << "Query was: " << e.query() << std::endl;
+    exit(EXIT_FAILURE);
+  } catch (const std::exception &e) {
+    std::cerr << "Error: " << e.what() << std::endl;
+    exit(EXIT_FAILURE);
+  } 
 }
 
 
 void query4(connection *C, string team_state, string team_color)
 {
+  string sql = "SELECT FIRST_NAME, LAST_NAME, UNIFORM_NUM "
+  + "FROM PLAYER, STATE, COLOR, TEAM " 
+  + "WHERE PLAYER.TEAM_ID = TEAM.TEAM_ID AND TEAM.STATE_ID = STATE.STATE_ID AND TEAM.COLOR_ID = COLOR.COLOR_ID AND " +
+  + "TEAM.NAME = '" + team_state + " AND COLOR.NAME = '" + team_color + "' ;"
+  try {
+    cout << "FIRST_NAME LAST_NAME UNIFORM_NUM"<<endl;
+    nontransaction N(*C);
+    result R( N.exec( sql ));
+    for (result::const_iterator c = R.begin(); c != R.end(); ++c) {
+      cout << c[0].as<string>() << " "<< c[1].as<string>() <<" " <<c[2].as<string>()  << endl;
+    }
+  } catch (const pqxx::sql_error &e) {
+    std::cerr << "SQL error: " << e.what() << std::endl;
+    std::cerr << "Query was: " << e.query() << std::endl;
+    exit(EXIT_FAILURE);
+  } catch (const std::exception &e) {
+    std::cerr << "Error: " << e.what() << std::endl;
+    exit(EXIT_FAILURE);
+  } 
 }
 
 
 void query5(connection *C, int num_wins)
 {
+  string sql = "SELECT FIRST_NAME, LAST_NAME, TEAM.NAME, WINS "
+  +"FROM PLAYER, TEAM "+
+  +"WHERE PLAYER.TEAM_ID = TEAM.TEAM_ID AND WINS > "
+  +to_string(num_wins) + ";";
+  try {
+    cout << "FIRST_NAME LAST_NAME NAME WINS"<<endl;
+    nontransaction N(*C);
+    result R( N.exec( sql ));
+    for (result::const_iterator c = R.begin(); c != R.end(); ++c) {
+      cout << c[0].as<string>() << " "<< c[1].as<string>() <<" " <<c[2].as<string>()" " <<c[3].as<string>()  << endl;
+    }
+  } catch (const pqxx::sql_error &e) {
+    std::cerr << "SQL error: " << e.what() << std::endl;
+    std::cerr << "Query was: " << e.query() << std::endl;
+    exit(EXIT_FAILURE);
+  } catch (const std::exception &e) {
+    std::cerr << "Error: " << e.what() << std::endl;
+    exit(EXIT_FAILURE);
+  } 
 }

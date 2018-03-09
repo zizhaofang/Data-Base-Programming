@@ -7,5 +7,9 @@ void exercise(connection *C)
     add_state(C, "NEW");
     add_team(C, "NEW", 1, 1, 1, 1);
     query1(C, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,3,5);
+    query2(C, "DarkBlue");
+    query3(C, "Duke");
+    query4(C, "NC", "DarkBlue");
+    query5(C, 10);
 
 }
