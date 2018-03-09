@@ -206,10 +206,7 @@ void query2(connection *C, string team_color)
 
 void query3(connection *C, string team_name)
 {
-  string sql = "SELECT FIRST_NAME, LAST_NAME "
-  + "FROM PLAYER, COLOR " 
-  + "WHERE PLAYER.TEAM_ID = TEAM.TEAM.ID AND TEAM.NAME = '" + team_name + "' " 
-  + "ORDER BY PPG DESC;"; 
+  string sql = "SELECT FIRST_NAME, LAST_NAME FROM PLAYER, COLOR, TEAM WHERE PLAYER.TEAM_ID = TEAM.TEAM_ID AND TEAM.NAME = '" + team_name + "' ORDER BY PPG DESC;"; 
   try {
     cout << "FIRST_NAME LAST_NAME"<<endl;
     nontransaction N(*C);
@@ -230,10 +227,7 @@ void query3(connection *C, string team_name)
 
 void query4(connection *C, string team_state, string team_color)
 {
-  string sql = "SELECT FIRST_NAME, LAST_NAME, UNIFORM_NUM "
-  + "FROM PLAYER, STATE, COLOR, TEAM " 
-  + "WHERE PLAYER.TEAM_ID = TEAM.TEAM_ID AND TEAM.STATE_ID = STATE.STATE_ID AND TEAM.COLOR_ID = COLOR.COLOR_ID AND " +
-  + "TEAM.NAME = '" + team_state + " AND COLOR.NAME = '" + team_color + "' ;"
+  string sql = "SELECT FIRST_NAME, LAST_NAME, UNIFORM_NUM FROM PLAYER, STATE, COLOR, TEAM WHERE PLAYER.TEAM_ID = TEAM.TEAM_ID AND TEAM.STATE_ID = STATE.STATE_ID AND TEAM.COLOR_ID = COLOR.COLOR_ID AND TEAM.NAME = '" + team_state + "' AND COLOR.NAME = '" + team_color + "' ;";
   try {
     cout << "FIRST_NAME LAST_NAME UNIFORM_NUM"<<endl;
     nontransaction N(*C);
@@ -254,16 +248,14 @@ void query4(connection *C, string team_state, string team_color)
 
 void query5(connection *C, int num_wins)
 {
-  string sql = "SELECT FIRST_NAME, LAST_NAME, TEAM.NAME, WINS "
-  +"FROM PLAYER, TEAM "+
-  +"WHERE PLAYER.TEAM_ID = TEAM.TEAM_ID AND WINS > "
+  string sql = "SELECT FIRST_NAME, LAST_NAME, TEAM.NAME, WINS FROM PLAYER, TEAM WHERE PLAYER.TEAM_ID = TEAM.TEAM_ID AND WINS > "
   +to_string(num_wins) + ";";
   try {
     cout << "FIRST_NAME LAST_NAME NAME WINS"<<endl;
     nontransaction N(*C);
     result R( N.exec( sql ));
     for (result::const_iterator c = R.begin(); c != R.end(); ++c) {
-      cout << c[0].as<string>() << " "<< c[1].as<string>() <<" " <<c[2].as<string>()" " <<c[3].as<string>()  << endl;
+      cout << c[0].as<string>() << " "<< c[1].as<string>() <<" " <<c[2].as<string>() << " " <<c[3].as<string>()  << endl;
     }
   } catch (const pqxx::sql_error &e) {
     std::cerr << "SQL error: " << e.what() << std::endl;
