@@ -145,10 +145,10 @@ void query1(connection *C,
     instr.push_back(" ( APG BETWEEN "+ to_string( min_apg )+ " AND " + to_string( max_apg ) + " ) ");
   }
   if(use_spg == 1) {
-    instr.push_back(" ( SPG BETWEEN "+ to_string( min_spg )+ " AND " + to_string( max_spg ) + " ) ");
+    instr.push_back(" ( SPG BETWEEN "+ to_string( min_spg ).substr(0,3)+ " AND " + to_string( max_spg ).substr(0,3) + " ) ");
   }
   if(use_bpg == 1) {
-    instr.push_back(" ( BPG BETWEEN "+ to_string( min_bpg )+ " AND " + to_string( max_bpg ) + " ) ");
+    instr.push_back(" ( BPG BETWEEN "+ to_string( min_bpg ).substr(0,3)+ " AND " + to_string( max_bpg ).substr(0,3) + " ) ");
   }
   if(instr.size() >= 0) {
     sql += "WHERE ";
@@ -164,10 +164,10 @@ void query1(connection *C,
     nontransaction N(*C);
     result R( N.exec( sql ));
     for (result::const_iterator c = R.begin(); c != R.end(); ++c) {
-      for(int i = 0; i < 11; i++ ) {
+      for(int i = 0; i < 9; i++ ) {
         cout << c[i].as<string>() << " ";
       }
-      cout << endl;
+      cout << fixed << setprecision(1) << c[9].as<double>() <<" " << c[10].as<double> ()<< endl;
     }
   }catch (const pqxx::sql_error &e) {
     std::cerr << "SQL error: " << e.what() << std::endl;
