@@ -1,5 +1,6 @@
 #include "query_funcs.h"
 
+
 void unifyStringForamt(string& s) {
   for(int i = 0 ; i < s.size(); i++) {
     if(s[i] == '\'') {
@@ -29,9 +30,10 @@ void add_player(connection *C, int team_id, int jersey_num, string first_name, s
     sql += "VALUES ( " + string("DEFAULT") + "," + vec[1] + "," + vec[2] + ",'" + vec[3] + "','" + vec[4] + "'," + vec[5] + "," 
       + vec[6] + "," + vec[7] + "," + vec[8] + "," + vec[9] +","+ vec[10]  +");";
     try{
-      work W = work(*C);
-      W.exec(sql);
-      W.commit();
+      work* W = new work(*C);
+      W->exec(sql);
+      W->commit();
+      delete W;
     }catch (const pqxx::sql_error &e) {
       std::cerr << "SQL error: " << e.what() << std::endl;
       std::cerr << "Query was: " << e.query() << std::endl;
@@ -40,6 +42,7 @@ void add_player(connection *C, int team_id, int jersey_num, string first_name, s
       std::cerr << "Error: " << e.what() << std::endl;
       exit(EXIT_FAILURE);
   }
+  
 }
 
 
@@ -57,9 +60,10 @@ void add_team(connection *C, string name, int state_id, int color_id, int wins, 
   sql = sql + "VALUES ( " + "DEFAULT" + ",'" + vec[1] + "', "+ vec[2] 
       + "," + vec[3] + "," +vec[4] + "," + vec[5] + ");";
   try{
-      work W = work(*C);
-      W.exec(sql);
-      W.commit();
+      work* W = new work(*C);
+      W->exec(sql);
+      W->commit();
+      delete W;
     }catch (const pqxx::sql_error &e) {
       std::cerr << "SQL error: " << e.what() << std::endl;
       std::cerr << "Query was: " << e.query() << std::endl;
@@ -68,6 +72,7 @@ void add_team(connection *C, string name, int state_id, int color_id, int wins, 
       std::cerr << "Error: " << e.what() << std::endl;
       exit(EXIT_FAILURE);
   }
+  
 }
 
 
@@ -78,9 +83,10 @@ void add_state(connection *C, string name)
   string sql = "INSERT INTO STATE (STATE_ID, NAME) ";
   sql += "VALUES ( DEFAULT, '" + temp + "')";
   try{
-      work W = work(*C);
-      W.exec(sql);
-      W.commit();
+      work* W = new work(*C);
+      W->exec(sql);
+      W->commit();
+      delete W;
     }catch (const pqxx::sql_error &e) {
       std::cerr << "SQL error: " << e.what() << std::endl;
       std::cerr << "Query was: " << e.query() << std::endl;
@@ -89,6 +95,7 @@ void add_state(connection *C, string name)
       std::cerr << "Error: " << e.what() << std::endl;
       exit(EXIT_FAILURE);
   }
+  
 }
 
 
@@ -99,9 +106,10 @@ void add_color(connection *C, string name)
   string sql = "INSERT INTO COLOR (COLOR_ID, NAME) ";
   sql += "VALUES ( DEFAULT, '" + temp + "')";
   try{
-      work W = work(*C);
-      W.exec(sql);
-      W.commit();
+      work* W = new work(*C);
+      W->exec(sql);
+      W->commit();
+      delete W;
     }catch (const pqxx::sql_error &e) {
       std::cerr << "SQL error: " << e.what() << std::endl;
       std::cerr << "Query was: " << e.query() << std::endl;
@@ -110,6 +118,7 @@ void add_color(connection *C, string name)
       std::cerr << "Error: " << e.what() << std::endl;
       exit(EXIT_FAILURE);
   }
+
 }
 
 
@@ -150,16 +159,25 @@ void query1(connection *C,
         sql += " AND ";
     }
   }
-  sql += ";"
+  sql += ";";
   try{
-    work W = work(*C);
-    result r = W.exec(sql);
     cout << "PLAYER_ID TEAM_ID UNIFORM_NUM FIRST_NAME LAST_NAME MPG PPG RPG APG SPG BPG" << endl;
-    for(auto row:r) {
-      for(auto field:row) {
-        cout << field.c_str() << " ";
-      }
-      cout << endl;
+    nontransaction N(*C);
+    result R( N.exec( sql ));
+    for (result::const_iterator c = R.begin(); c != R.end(); ++c) {
+      cout 
+      << c[0].as<string>() << " "
+      << c[1].as<string>() << " "
+      << c[2].as<string>() << " "
+      << c[3].as<string>() << " "
+      << c[4].as<string>() << " "
+      << c[5].as<string>() << " "
+      << c[6].as<string>() << " "
+      << c[7].as<string>() << " "
+      << c[8].as<string>() << " "
+      << c[9].as<string>() << " "
+      << c[10].as<string>()
+      <<endl;
     }
   }catch (const pqxx::sql_error &e) {
     std::cerr << "SQL error: " << e.what() << std::endl;
