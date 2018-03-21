@@ -145,10 +145,10 @@ void query1(connection *C,
     instr.push_back(" ( APG BETWEEN "+ to_string( min_apg )+ " AND " + to_string( max_apg ) + " ) ");
   }
   if(use_spg == 1) {
-    instr.push_back(" ( SPG BETWEEN "+ to_string( min_spg ).substr(0,3)+ " AND " + to_string( max_spg ).substr(0,3) + " ) ");
+    instr.push_back(" ( SPG BETWEEN "+ to_string( min_spg ) + " AND " + to_string( max_spg ) + " ) ");
   }
   if(use_bpg == 1) {
-    instr.push_back(" ( BPG BETWEEN "+ to_string( min_bpg ).substr(0,3)+ " AND " + to_string( max_bpg ).substr(0,3) + " ) ");
+    instr.push_back(" ( BPG BETWEEN "+ to_string( min_bpg ) + " AND " + to_string( max_bpg ) + " ) ");
   }
   if(instr.size() >= 0) {
     sql += "WHERE ";
